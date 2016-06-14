@@ -1,0 +1,96 @@
+#!/bin/bash
+_unpad() ## Remove leading zeroes from $1
+{
+    _UNPAD=$1
+    while :
+    do
+      case $_UNPAD in
+          0) break ;;
+          0*) _UNPAD=${_UNPAD#0} ;;
+          "") return 5 ;;
+          *) break ;;
+      esac
+    done
+}
+
+unpad_()
+{
+    UNPAD_VAR=$1
+    shift
+    eval "UNPAD_VAL=\$$UNPAD_VAR"
+    _unpad "$UNPAD_VAL" "$@" && eval "$UNPAD_VAR=\$_UNPAD"
+}
+
+unpad()
+{
+    for _X
+    do
+      _unpad $_X && printf "%s\n" "$_UNPAD"
+    done
+}
+
+width=
+bk=
+chdiv=
+NL='
+'
+while getopts w:sbc opt
+do
+  case $opt in
+      w) width=$OPTARG ;;
+      s) sep=$NL ;;
+      b) bk=1 ;;
+      c) chdiv=$'\n------\n'
+  esac
+done
+shift $(( $OPTIND - 1 ))
+
+len=7
+indent=$(( $len + 1 ))
+lastchapter=1
+
+if [ -z $width ]
+then
+  eval $(resize)
+##  width=80 ##$(( $COLUMNS - 2 ))
+  width=${COLUMNS:-80}
+fi
+
+cat ${1:+"$@"} |
+  while IFS=: read book chapter verse text
+  do
+
+    unpad_ chapter
+    unpad_ verse
+
+    if [ "$book" != "$lastbook" ]
+    then
+      lastbook=$book
+      lastchapter=1
+      [ -z "$bk" ] && printf "\n%s\n" "$book"
+    elif [ "$chapter" != "$lastchapter" ]
+    then
+      lastchapter=$chapter
+      [ -n "$chdiv" ] && printf "%s" "$chdiv"
+    fi
+
+    [ -n "$bk" ] && printf "\n%s\n" "$book"
+
+    printf "%s%3d:%-3d" "$sep" "$chapter" "$verse"
+    len=7
+
+    for word in $text
+    do
+      templen=$(( $len + 1 + ${#word} ))
+      if [ $templen -gt $(( $width - $indent )) ]
+      then
+        printf "\n%${indent}s%s" " " "$word"
+        len=$indent
+      else
+        len=$templen
+        printf " %s" "$word"
+      fi
+    done
+    printf "\n"
+  done
+  printf "\n"

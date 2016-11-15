@@ -15,8 +15,8 @@ fi
 l=$1
 c=$2
 v=$3
-b=$HOME/Documentos/Dropbox/git/bible/rv60
-export format=$HOME/Documentos/Dropbox/git/bible/format.rv60
+b=$HOME/Documentos/Dropbox/git/Code/bible/rv60
+export format=$HOME/Documentos/Dropbox/git/Code/bible/format.rv60
 
 if [ $# = 1 ]; then
     cat $b | grep ^$l | $format

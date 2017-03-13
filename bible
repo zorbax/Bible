@@ -3,7 +3,7 @@
 usage ()
 {
     echo ""
-    echo 'Usage : bible <book> <chapter> <versicle>'
+    echo 'Usage : bible <book> <chapter>:<versicle>'
     echo ""
     exit
 }
@@ -15,6 +15,7 @@ fi
 l=$1
 c=$2
 v=$3
+
 b=$HOME/Documentos/Dropbox/git/Code/bible/rv60
 export format=$HOME/Documentos/Dropbox/git/Code/bible/format.rv60
 
@@ -25,36 +26,3 @@ elif [ $# = 2 ]; then
 else
     cat $b | grep ^$l | grep -E ":[0]{0,2}"$c":[0-9]{3}" | grep -E "[0-9]{3}:[0]*$v:" | $format
 fi
-
-
-
-
-
-#_bible()
-#{
-#  local cur prev opts
-#  COMPREPLY=()
-#  cur="${COMP_WORDS[COMP_CWORD]}"
-##  prev="${COMP_WORDS[COMP_CWORD-1]}"
-#  opts="
-
-#  Genesis Exodo Levitico Numeros Deuteronomio
-#  Josue Jueces Rut 1_Samuel 2_Samuel 1_Reyes
-#  2_Reyes 1_Cronicas 2_Cronicas Esdras Nehemias
-#  Ester Job Salmos Proverbios Eclesiastes Cantares
-#  Isaias Jeremias Lamentaciones Ezequiel Daniel
-#  Oseas Joel Amos Abdias Jonas Miqueas Nahum Habacuc
-#  Sofonias Hageo Zacarias Malaquias
-#  Mateo Marcos Lucas Juan Hechos Romanos 1_Corintios 2_Corintios
-#  Galatas Efesios Filipenses Colosenses 1_Tesalonicenses
-#  2_Tesalonicenses 1_Timoteo 2_Timoteo Tito Filemon Hebreos
-#  Santiago 1_Pedro 2_Pedro 1_Juan 2_Juan 3_Juan Judas Apocalipsis"
-
-#case $prev in
-#     bible)
-#         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-#         ;;
-# esac
-# return 0
-#}
-#complete -F _bible -o default bible

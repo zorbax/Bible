@@ -16,13 +16,14 @@ l=$1
 c=$2
 v=$3
 
-b=$HOME/Documentos/Dropbox/git/Code/bible/rv60
-export format=$HOME/Documentos/Dropbox/git/Code/bible/format.rv60
+d="$(cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd)"
+b=$d/rv60
+export f=$d/format.rv60
 
 if [ $# = 1 ]; then
-    cat $b | grep ^$l | $format
+    cat $b | grep ^$l | $f
 elif [ $# = 2 ]; then
-    cat $b | grep ^$l | grep -E ":[0]{0,2}"$c":[0-9]{3}" | $format
+    cat $b | grep ^$l | grep -E ":[0]{0,2}$c:[0-9]{3}" | $f
 else
-    cat $b | grep ^$l | grep -E ":[0]{0,2}"$c":[0-9]{3}" | grep -E "[0-9]{3}:[0]*$v:" | $format
+    cat $b | grep ^$l | grep -E ":[0]{0,2}$c:[0-9]{3}" | grep -E "[0-9]{3}:[0]*$v:" | $f
 fi
